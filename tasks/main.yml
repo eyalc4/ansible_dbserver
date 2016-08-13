@@ -1,0 +1,4 @@
+---
+- include: mariadb.yml
+- include: tools.yml
+#- include: mysql_secure_installation.yml

@@ -1,0 +1,12 @@
+---
+#- name: "Ensure required libs are installed"
+#  yum: name={{ item }} enablerepo=remi,remi-php{{ php_version }} state=present
+#  with_items:
+#    - php-pecl-zip
+
+- name: Ensure phpMyAdmin is installed
+  yum: name=phpmyadmin enablerepo=remi,remi-php{{ php_version }} state=present
+
+- name: Enforce phpMyAdmin settings file
+  template: src=templates/phpMyAdmin.conf.j2 dest=/etc/httpd/conf.d/phpMyAdmin.conf owner=root group=root mode=0644
+
