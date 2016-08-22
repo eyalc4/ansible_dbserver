@@ -1,0 +1,6 @@
+---
+- name: copy performance.cnf template to apply optimizations to mariadb
+  template: src=performance.cnf.j2 dest=/etc/my.cnf.d/performance.cnf owner=root group=root mode=0600
+  notify: restart mariadb
+
+#- mysql_variables: config_file= variable=read_only value=1

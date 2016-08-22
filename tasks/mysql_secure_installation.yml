@@ -29,7 +29,7 @@
 #    - localhost
 
 #- name: copy user my.cnf file with root passwd credentials
-#  template: src=my.cnf.j2 dest=/root/.my.cnf owner=root group=root mode=0600
+#  template: src=performance.cnf.j2 dest=/root/.my.cnf owner=root group=root mode=0600
 
 
 
