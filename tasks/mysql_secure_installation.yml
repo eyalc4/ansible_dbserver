@@ -38,9 +38,13 @@
 - name: Update MySQL root password for localhost root account
   shell: >
     mysql -u root -NBe
-    'ALTER USER "{{ mysql_root_username }}"@"{{ item }}" IDENTIFIED BY "{{ mysql_root_password }}";'
+#    'ALTER USER "{{ mysql_root_username }}"@"{{ item }}" IDENTIFIED BY "{{ mysql_root_password }}";'
+      'update user set password=PASSWORD("{{ db_root_password }}") where User={{ db_root_user }};'
   with_items: "{{ mysql_root_hosts.stdout_lines }}"
   #when: (mysql_root_password_update) and ('5.7.' in mysql_cli_version.stdout)
+
+
+
 
 #- name: update mysql root passwd
 #  mysql_user: login_user=root login_password=''
