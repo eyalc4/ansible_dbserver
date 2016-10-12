@@ -39,7 +39,7 @@
     - mariadb-server
 
 - name: Ensure python-mysqldb is installed - required to control mysql from ansible
-  yum: name=mysql-python state=present
+  yum: name=MySQL-python state=present
 
 - name: Ensure MariaDB is running and start at boot
   service: name=mariadb.service state=running enabled=yes
