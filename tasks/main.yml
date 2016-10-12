@@ -1,7 +1,8 @@
 ---
 - include: mariadb.yml
+- include: mysql_secure_installation.yml
 - include: tools.yml
 - include: mariadb_tuning.yml
 - include: databases.yml
 - include: users.yml
-#- include: mysql_secure_installation.yml
+
