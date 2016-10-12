@@ -40,7 +40,7 @@
     mysql -u root -NBe
     'ALTER USER "{{ mysql_root_username }}"@"{{ item }}" IDENTIFIED WITH mysql_native_password BY "{{ mysql_root_password }}";'
   with_items: "{{ mysql_root_hosts.stdout_lines }}"
-  when: ((mysql_install_packages | bool) or mysql_root_password_update) and ('5.7.' in mysql_cli_version.stdout)
+  #when: (mysql_root_password_update) and ('5.7.' in mysql_cli_version.stdout)
 
 #- name: update mysql root passwd
 #  mysql_user: login_user=root login_password=''
