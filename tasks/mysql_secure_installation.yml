@@ -1,4 +1,8 @@
 ---
+- name: Get MySQL version.
+  command: 'mysql --version'
+  register: mysql_cli_version
+  changed_when: false
 
 #- name: Create mysql root pass
 #  command: /usr/bin/openssl rand -base64 16
@@ -13,9 +17,30 @@
 - name: Remove mysql test database
   mysql_db: name=test state=absent
 
-- name: update mysql root passwd
-  mysql_user: login_user=root login_password='' name=root host=127.0.0.1 password={{ mysql_root_password  }}
 
+- name: Disallow root login remotely
+  command: 'mysql -NBe "{{ item }}"'
+  with_items:
+    - DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1')
+  changed_when: false
+
+- name: Get list of hosts for the root user.
+  command: mysql -NBe 'SELECT Host FROM mysql.user WHERE User = "root" ORDER BY (Host="localhost") ASC'
+  register: mysql_root_hosts
+  changed_when: false
+  always_run: true
+
+#- name: update mysql root passwd
+#  mysql_user: login_user=root login_password='' name=root host=127.0.0.1 password={{ mysql_root_password  }}
+# Note: We do not use mysql_user for this operation, as it doesn't always update
+# the root password correctly. See: https://goo.gl/MSOejW
+# Set root password for MySQL >= 5.7.x.
+- name: Update MySQL root password for localhost root account
+  shell: >
+    mysql -u root -NBe
+    'ALTER USER "{{ mysql_root_username }}"@"{{ item }}" IDENTIFIED WITH mysql_native_password BY "{{ mysql_root_password }}";'
+  with_items: "{{ mysql_root_hosts.stdout_lines }}"
+  when: ((mysql_install_packages | bool) or mysql_root_password_update) and ('5.7.' in mysql_cli_version.stdout)
 
 #- name: update mysql root passwd
 #  mysql_user: login_user=root login_password=''
