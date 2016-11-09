@@ -39,7 +39,14 @@
 #    'ALTER USER "{{ mysql_root_username }}"@"{{ item }}" IDENTIFIED BY "{{ mysql_root_password }}";'
 
 
-
+# Has to be after the root password assignment, for idempotency.
+- name: Copy .my.cnf file with root password
+  template:
+    src: "root.my.cnf.j2"
+    dest: "~/.my.cnf"
+    owner: root
+    group: root
+    mode: 0600
 #- name: update mysql root passwd
 #  mysql_user: login_user=root login_password=''
 #    name=root
