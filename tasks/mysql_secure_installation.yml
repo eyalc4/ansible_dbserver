@@ -43,7 +43,7 @@
 - name: Copy .my.cnf file with root password
   template:
     src: "root.my.cnf.j2"
-    dest: "/home/vagrant/.my.cnf"
+    dest: "/root/.my.cnf"
     owner: root
     group: root
     mode: 0600
