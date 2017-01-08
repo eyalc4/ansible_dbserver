@@ -16,7 +16,7 @@
     #    - "{{ ansible_hostname }}"
 
 - name: Update mysql root password for all root accounts
-  mysql_user: name=root login_host="{{ item }}" password="{{ root_db_password }}"
+  mysql_user: name=root login_host="{{ item }}" password="{{ db_root_user }}"
   with_items:
     - 127.0.0.1
     - ::1
