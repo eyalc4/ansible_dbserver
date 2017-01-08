@@ -8,6 +8,16 @@
 #  command: /usr/bin/openssl rand -base64 16
 #  register: mysql_root_passwd
 
+#- name: update mysql root passwd
+#  mysql_user: login_user=root login_password='' name=root host=127.0.0.1 password={{ mysql_root_password  }}
+# Note: We do not use mysql_user for this operation, as it doesn't always update
+# the root password correctly. See: https://goo.gl/MSOejW
+# Set root password for MySQL >= 5.7.x.
+- name: Update MySQL root password for localhost root account
+  shell: >
+    mysql -u root -NBe 'update user set password=PASSWORD("{{ db_root_password }}") where User="{{ db_root_user }}";' mysql
+  with_items: "{{ mysql_root_hosts.stdout_lines }}"
+
 - name: Delete anonymous user from MariaDB
   mysql_user: user="" host_all=yes state=absent
 
@@ -26,15 +36,6 @@
   changed_when: false
   always_run: true
 
-#- name: update mysql root passwd
-#  mysql_user: login_user=root login_password='' name=root host=127.0.0.1 password={{ mysql_root_password  }}
-# Note: We do not use mysql_user for this operation, as it doesn't always update
-# the root password correctly. See: https://goo.gl/MSOejW
-# Set root password for MySQL >= 5.7.x.
-- name: Update MySQL root password for localhost root account
-  shell: >
-    mysql -u root -NBe 'update user set password=PASSWORD("{{ db_root_password }}") where User="{{ db_root_user }}";' mysql
-  with_items: "{{ mysql_root_hosts.stdout_lines }}"
   #when: (mysql_root_password_update) and ('5.7.' in mysql_cli_version.stdout)
 #    'ALTER USER "{{ mysql_root_username }}"@"{{ item }}" IDENTIFIED BY "{{ mysql_root_password }}";'
 
