@@ -18,6 +18,15 @@
     mysql -u root -NBe 'update user set password=PASSWORD("{{ db_root_password }}") where User="{{ db_root_user }}";' mysql
   with_items: "{{ mysql_root_hosts.stdout_lines }}"
 
+- name: Update mysql root password for all root accounts
+      mysql_user: name=root host={{ item }} password={{ root_db_password }}
+      with_items:
+        - {{ ansible_hostname }}
+        - 127.0.0.1
+        - ::1
+        - localhost
+
+
 - name: Delete anonymous user from MariaDB
   mysql_user: user="" host_all=yes state=absent
 
