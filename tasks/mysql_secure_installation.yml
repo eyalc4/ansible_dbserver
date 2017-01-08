@@ -13,10 +13,11 @@
 # Note: We do not use mysql_user for this operation, as it doesn't always update
 # the root password correctly. See: https://goo.gl/MSOejW
 # Set root password for MySQL >= 5.7.x.
+    #    - "{{ ansible_hostname }}"
+
 - name: Update mysql root password for all root accounts
       mysql_user: name=root login_host="{{ item }}" password="{{ root_db_password }}"
       with_items:
-    #    - "{{ ansible_hostname }}"
         - 127.0.0.1
         - ::1
         - localhost
