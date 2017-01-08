@@ -16,11 +16,11 @@
     #    - "{{ ansible_hostname }}"
 
 - name: Update mysql root password for all root accounts
-      mysql_user: name=root login_host="{{ item }}" password="{{ root_db_password }}"
-      with_items:
-        - 127.0.0.1
-        - ::1
-        - localhost
+  mysql_user: name=root login_host="{{ item }}" password="{{ root_db_password }}"
+  with_items:
+    - 127.0.0.1
+    - ::1
+    - localhost
 
 
 - name: Delete anonymous user from MariaDB
