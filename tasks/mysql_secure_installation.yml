@@ -13,11 +13,6 @@
 # Note: We do not use mysql_user for this operation, as it doesn't always update
 # the root password correctly. See: https://goo.gl/MSOejW
 # Set root password for MySQL >= 5.7.x.
-- name: Update MySQL root password for localhost root account
-  shell: >
-    mysql -u root -NBe 'update user set password=PASSWORD("{{ db_root_password }}") where User="{{ db_root_user }}";' mysql
-  with_items: "{{ mysql_root_hosts.stdout_lines }}"
-
 - name: Update mysql root password for all root accounts
       mysql_user: name=root host={{ item }} password={{ root_db_password }}
       with_items:
