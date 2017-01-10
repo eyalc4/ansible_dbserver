@@ -16,12 +16,21 @@
     #    - "{{ ansible_hostname }}"
 
 - name: Update mysql root password for all root accounts
-  mysql_user: name=root host="{{ item }}" password="{{ db_root_user }}" state=present
-  with_items:
-    - 127.0.0.1
-    - ::1
-    - localhost
+  mysql_user: name=root host_all=yes password="{{ db_root_user }}" state=present
   register: password_change
+ # with_items:
+ #   - 127.0.0.1
+ #   - ::1
+ #   - localhost
+
+# Has to be after the root password assignment, for idempotency.
+- name: Copy .my.cnf file with root password
+  template:
+    src: "root.my.cnf.j2"
+    dest: "/root/.my.cnf"
+    owner: root
+    group: root
+    mode: 0600
 
 # Restart after password change, otherwise the .my.cnf will be updated, but the password will be the old one
 - name: restart mariadb
@@ -29,7 +38,7 @@
   when: password_change.changed
 
 - name: Delete anonymous user from MariaDB
-  mysql_user: user="" host_all=yes state=absent
+  mysql_user: login_user="root" user="" host_all=yes state=absent
 
 - name: Remove mysql test database
   mysql_db: name=test state=absent
@@ -50,14 +59,7 @@
 #    'ALTER USER "{{ mysql_root_username }}"@"{{ item }}" IDENTIFIED BY "{{ mysql_root_password }}";'
 
 
-# Has to be after the root password assignment, for idempotency.
-- name: Copy .my.cnf file with root password
-  template:
-    src: "root.my.cnf.j2"
-    dest: "/root/.my.cnf"
-    owner: root
-    group: root
-    mode: 0600
+
 
 #- name: update mysql root passwd
 #  mysql_user: login_user=root login_password=''
