@@ -21,7 +21,12 @@
     - 127.0.0.1
     - ::1
     - localhost
+  register: password_change
 
+# Restart after password change, otherwise the .my.cnf will be updated, but the password will be the old one
+- name: restart mariadb
+  service: name=mariadb.service state=restarted
+  when: password_change.changed
 
 - name: Delete anonymous user from MariaDB
   mysql_user: user="" host_all=yes state=absent
@@ -53,6 +58,7 @@
     owner: root
     group: root
     mode: 0600
+
 #- name: update mysql root passwd
 #  mysql_user: login_user=root login_password=''
 #    name=root
