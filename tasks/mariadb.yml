@@ -1,34 +1,4 @@
 ---
-# Installs MariaDB
-#- name: Add MariaDB repository
-#  yumrepo:
-#    name: mariadb
-#    description: MariaDB YUM repo
-#    baseurl: http://yum.mariadb.org/10.1/centos7-amd64
-#    gpgkey: https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
-#    gpgcheck: no
-
-#- name: Import MariaDB GPG key.
-#  rpm_key: "key={{ item }} state=present"
-#  with_items:
-#    - "https://yum.mariadb.org/RPM-GPG-KEY-MariaDB"
-
-#- name: Install MariaDB repository
-#  yum:
-#    name: http://yum.mariadb.org/10.1/centos7-amd64/rpms/MariaDB-10.1.12-centos7-x86_64-server.rpm
-#    state: present
-
-#- name: Install MariaDB repository
-#  yum:
-#    name: http://yum.mariadb.org/10.1/centos7-amd64/rpms/MariaDB-10.1.12-centos7-x86_64-common.rpm
-#    state: present
-
-#- name: Install MariaDB repository
-#  yum:
-#    name: http://yum.mariadb.org/10.1/centos7-amd64/rpms/MariaDB-10.1.12-centos7-x86_64-client.rpm
-#    state: present
-
-
 - name: Install mariadb repository
   template: src=templates/MariaDB.repo.j2 dest=/etc/yum.repos.d/MariaDB.repo owner=root group=root mode=0644
 
@@ -42,4 +12,4 @@
   yum: name=MySQL-python state=present
 
 - name: Ensure MariaDB is running and start at boot
-  service: name=mariadb.service state=running enabled=yes
+  service: name=mariadb.service state=started enabled=yes
