@@ -1,18 +1,19 @@
 ---
-mysql_user_home: /root
-mysql_root_username: root
-mysql_root_password: root
+db_user_home: /root
+db_root_user: root
+db_root_password: root
+
+db_database: ""
+db_user: ""
 
 # Databases.
-mysql_databases: []
-#   - name: example
-#     collation: utf8_general_ci
-#     encoding: utf8
-#     replicate: 1
+mysql_databases:
+  - name: "{{ db_database }}"
+    encoding: utf8
+    collation: utf8_general_ci
 
-# Users.
-mysql_users: []
-#   - name: example
-#     host: 127.0.0.1
-#     password: secret
-#     priv: *.*:USAGE
+mysql_users:
+  - name: "{{ db_user }}"
+    host: "%"
+    password: "{{ db_password }}"
+    priv: "{{ db_database }}.*:ALL"

@@ -4,24 +4,9 @@
   register: mysql_cli_version
   changed_when: false
 
-#- name: Create mysql root pass
-#  command: /usr/bin/openssl rand -base64 16
-#  register: mysql_root_passwd
-
-#- name: update mysql root passwd
-#  mysql_user: login_user=root login_password='' name=root host=127.0.0.1 password={{ mysql_root_password  }}
-# Note: We do not use mysql_user for this operation, as it doesn't always update
-# the root password correctly. See: https://goo.gl/MSOejW
-# Set root password for MySQL >= 5.7.x.
-    #    - "{{ ansible_hostname }}"
-
 - name: Update mysql root password for all root accounts
-  mysql_user: name=root host_all=yes password="{{ db_root_user }}" state=present
+  mysql_user: name=root host_all=yes password={{ db_root_password }} state=present
   register: password_change
- # with_items:
- #   - 127.0.0.1
- #   - ::1
- #   - localhost
 
 # Has to be after the root password assignment, for idempotency.
 - name: Copy .my.cnf file with root password
@@ -54,26 +39,3 @@
   register: mysql_root_hosts
   changed_when: false
   check_mode: no
-
-  #when: (mysql_root_password_update) and ('5.7.' in mysql_cli_version.stdout)
-#    'ALTER USER "{{ mysql_root_username }}"@"{{ item }}" IDENTIFIED BY "{{ mysql_root_password }}";'
-
-
-
-
-#- name: update mysql root passwd
-#  mysql_user: login_user=root login_password=''
-#    name=root
-#    host=\"{{ item }}\" password={{ mysql_root_password  }}
-#    priv=*.*:ALL,GRANT
-#  with_items:
-#    - \"{{ ansible_hostname }}\"
-#    - 127.0.0.1
-#    - ::1
-#    - localhost
-
-#- name: copy user my.cnf file with root passwd credentials
-#  template: src=performance.cnf.j2 dest=/root/.my.cnf owner=root group=root mode=0600
-
-
-

@@ -5,8 +5,8 @@
 - name: Ensure Mariadb Package is installed
   yum: name={{ item }} state=present
   with_items:
-    - mariadb
-    - mariadb-server
+    - MariaDB-server
+    - MariaDB-client
 
 - name: Ensure python-mysqldb is installed - required to control mysql from ansible
   yum: name=MySQL-python state=present
